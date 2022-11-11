@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  engineType      = "binary"
+  binaryTargets   = ["native", "rhel-openssl-1.0.x", "debian-openssl-1.1.x"]
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  fname    String?
+  lname    String?
+  avartar  String? @db.VarChar(255)
+  pets     Pet[]
+}
+
+model Pet {
+  id      Int    @id @default(autoincrement())
+  name    String @db.VarChar(255)
+  avartar String @db.VarChar(255)
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
